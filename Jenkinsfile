@@ -11,18 +11,17 @@ pipeline
                 {
                     try
                     {
-                        git 'https://github.com/dtamukong/mavenp.git'
+                        git 'https://github.com/dtamukong/PipelineDJ.git'
                     }
                     catch(Exception e1)
                     {
-                       mail bcc: '', body: 'Jenkins is unable to download the development code from github', cc: '', from: '', replyTo: '', subject: 'Download Failed', to: 'git.team@gmail.com' 
+                        mail bcc: '', body: 'unable to download  the code.', cc: '', from: '', replyTo: '', subject: 'Download Failed', to: 'git.team@gmail.com'
                         exit(1)
                     }
                 }
-                
             }
         }
-        stage('ContinousBuild')
+         stage('ContinousBuild')
         {
             steps
             {
@@ -30,18 +29,17 @@ pipeline
                 {
                     try
                     {
-                      sh 'mvn package'  
+                        sh 'mvn package'
                     }
                     catch(Exception e2)
                     {
-                       mail bcc: '', body: 'Jenkins is unable to create an artifact from the downloaded code', cc: '', from: '', replyTo: '', subject: 'Build Failed', to: 'dev.team@gmail.com'
+                        mail bcc: '', body: 'unable to create an artifact.', cc: '', from: '', replyTo: '', subject: 'Build Failed', to: 'developers.team@gmail.com'
                         exit(1)
                     }
                 }
-                
             }
         }
-        stage('ContinousDeloyment')
+         stage('ContinousDeployment')
         {
             steps
             {
@@ -49,15 +47,14 @@ pipeline
                 {
                     try
                     {
-                        deploy adapters: [tomcat9(credentialsId: 'c5b9db0d-318a-4838-86fc-ed04327a81e4', path: '', url: 'http://172.31.13.149:8080')], contextPath: 'Testapp', war: '**/*.war'
+                        deploy adapters: [tomcat9(credentialsId: '45d9bd40-fd6d-4ce6-9fea-586d42ba0b31', path: '', url: 'http://172.31.13.149:8080')], contextPath: 'testapp', war: '**/*.war'
                     }
                     catch(Exception e3)
                     {
-                       mail bcc: '', body: 'Jenkins is unable deploy artifact on onto tomcat on the QAServer', cc: '', from: '', replyTo: '', subject: 'Deployment Failed', to: 'middleware.team@gmail.com' 
+                        mail bcc: '', body: 'unable to deploy the artifact into tomcat on the QA server', cc: '', from: '', replyTo: '', subject: 'Deployment Failed', to: 'middleware.team@gmail.com'
                         exit(1)
                     }
                 }
-               
             }
         }
         stage('ContinousTesting')
@@ -69,19 +66,17 @@ pipeline
                     try
                     {
                         git 'https://github.com/dtamukong/FunctionalTestingProf.git'
-                        sh 'java -jar /var/lib/jenkins/workspace/DeclarativePipeline/testing.jar'
+                        sh 'java -jar /var/lib/jenkins/workspace/PipelineDJ/testing.jar'
                     }
                     catch(Exception e4)
                     {
-                        mail bcc: '', body: 'Jenkins is unable to test the Selenium scripts from github', cc: '', from: '', replyTo: '', subject: 'Testing Failed', to: 'qa.team@gmail.com'
+                        mail bcc: '', body: 'Selenium test scripts fail', cc: '', from: '', replyTo: '', subject: 'Testing Fail', to: 'middleware.team@gmail.com'
                         exit(1)
                     }
                 }
-                
-
             }
         }
-        stage('ContinousDelivery.')
+        stage('ContinousDelivery')
         {
             steps
             {
@@ -89,16 +84,15 @@ pipeline
                 {
                     try
                     {
-                        input message: 'waiting for approval from DM', submitter: 'shekina'
-       deploy adapters: [tomcat9(credentialsId: 'c5b9db0d-318a-4838-86fc-ed04327a81e4', path: '', url: 'http://172.31.0.76:8080')], contextPath: 'Prodapp', war: '**/*.war'
+                        input message: 'Waiting for DM approver ', submitter: 'DJ'
+                        deploy adapters: [tomcat9(credentialsId: '45d9bd40-fd6d-4ce6-9fea-586d42ba0b31', path: '', url: 'http://172.31.0.76:8080')], contextPath: 'prodapp', war: '**/*.war'
                     }
-                    catch(Exception e5)
+                    catch(Exception e4)
                     {
-                        mail bcc: '', body: 'Jenkins is unable to deploy into tomcat on the prodserver', cc: '', from: '', replyTo: '', subject: 'Delivery Failed', to: 'deleveryteam@gmail.com'
+                        mail bcc: '', body: 'Unable to deliver', cc: '', from: '', replyTo: '', subject: 'Delivery Failed', to: 'delivery.team@gmail.com'
+                        exit(1)
                     }
                 }
-                
-
             }
         }
     }
