@@ -81,7 +81,7 @@ pipeline
 
             }
         }
-        stage('ContinousDelivery')
+        stage('ContinousDelivery.')
         {
             steps
             {
