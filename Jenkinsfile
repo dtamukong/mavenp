@@ -69,7 +69,7 @@ pipeline
                     try
                     {
                         git 'https://github.com/dtamukong/FunctionalTestingProf.git'
-       sh 'java -jar /var/lib/jenkins/workspace/DeclarativePipeline/testing.jar'
+                        sh 'java -jar /var/lib/jenkins/workspace/DeclarativePipeline/testing.jar'
                     }
                     catch(Exception e4)
                     {
