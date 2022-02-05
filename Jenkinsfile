@@ -11,7 +11,7 @@ pipeline
                 {
                     try
                     {
-                        git 'https://github.com/dtamukong/PipelineDJ.git'
+                        git 'https://github.com/dtamukong/mavenp.git'
                     }
                     catch(Exception e1)
                     {
